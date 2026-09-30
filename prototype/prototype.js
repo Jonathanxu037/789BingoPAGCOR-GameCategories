@@ -10,6 +10,15 @@
   var CAT_LIST = ['Hot', 'Slot', 'Casino', 'Poker', 'Bingo', 'Arcade', 'Fishing', 'New'];
   var PLATS = ['NG', 'eBINGO', 'EGAMES'];
 
+  function exportCsv(head, rows, filename) {
+    var esc = function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var text = '\ufeff' + [head].concat(rows).map(function (r) { return r.map(esc).join(','); }).join('\r\n');
+    var url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 0);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 30000);
+  }
   function inList(list, id) { return list.some(function (x) { return x[0] === String(id).trim(); }); }
   function classify(vendor, gameId) {
     if (vendor !== LIST_VENDOR) return 'EGAMES';
@@ -146,7 +155,11 @@
             <span style="width:60px"></span>
             ${this.dropdown([''].concat(PLATS), s.sel, s.open, function () { self.setState({ open: !self.state.open }); }, function (o) { self.setState({ sel: o, open: false }); }, 128)}
             <button type="button" class="btn" onClick=${function () { self.setState({ applied: self.state.sel, open: false }); }}>搜索</button>
-            <button type="button" class="btn">导出</button>
+            <button type="button" class="btn" onClick=${function () {
+              var lines = rows.map(function (r) { return [r[0], r[1], r[2], '已结算', r[2], r[3], 'JILI', 'JILI', r[4], r[5], r[5], '-' + r[5], '0.000', '0.000', 'EGAMES', 'bb wave', 'PC', r[5]]; });
+              exportCsv(head.map(function (h) { return h.replace(' ⇅', ''); }), lines, 'bet_records_by_settle_time_' + (applied || 'ALL') + '.csv');
+              self.showToast('已导出 ' + lines.length + ' 条注单（平台名称：' + (applied || '全部') + '）');
+            }}>导出</button>
           </div>
         </div>
         <div style="display:flex;justify-content:flex-end;padding:8px 0"><button type="button" class="btn">总计</button></div>

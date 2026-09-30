@@ -31,35 +31,37 @@
 
 **NG 名单（7 款）**
 
-| 游戏ID | 游戏名称 | 版本 |
-| --- | --- | --- |
-| 440 | BOXING EXTRAVAGANZA | V. 1 |
-| 442 | GO FOR CHAMPION | V. 1 |
-| 241 | KENO | V. 1 |
-| 272 | KENO BONUS NUMBER | V. 1 |
-| 274 | KENO EXTRA BET | V. 1 |
-| 273 | KENO SUPER CHANCE | V. 1 |
-| 111 | NUMBER KING | V. 1 |
+| 游戏大类 | 游戏名称 | 游戏ID | 版本 | 平台名称 |
+| --- | --- | --- | --- | --- |
+| NUMERIC GAMES | BOXING EXTRAVAGANZA | 440 | V. 1 | NG |
+| NUMERIC GAMES | GO FOR CHAMPION | 442 | V. 1 | NG |
+| NUMERIC GAMES | KENO | 241 | V. 1 | NG |
+| NUMERIC GAMES | KENO BONUS NUMBER | 272 | V. 1 | NG |
+| NUMERIC GAMES | KENO EXTRA BET | 274 | V. 1 | NG |
+| NUMERIC GAMES | KENO SUPER CHANCE | 273 | V. 1 | NG |
+| NUMERIC GAMES | NUMBER KING | 111 | V. 1 | NG |
 
 **eBINGO 名单（13 款）**
 
-| 游戏ID | 游戏名称 |
-| --- | --- |
-| 177 | BINGO ADVENTURE |
-| 148 | BINGO CARNAVAL |
-| 149 | CALACA BINGO |
-| 216 | CANDYLAND BINGO |
-| 139 | FORTUNE BINGO |
-| 178 | GO GOAL BINGO |
-| 122 | IRICH BINGO |
-| 174 | JACKPOT BINGO |
-| 150 | LUCKY BINGO |
-| 217 | MAGIC LAMP BINGO |
-| 195 | PEARLS OF BINGO |
-| 151 | SUPER BINGO |
-| 173 | WEST HUNTER BINGO |
+| 游戏大类 | 游戏名称 | 游戏ID | 版本 | 平台名称 |
+| --- | --- | --- | --- | --- |
+| eBINGO GAMES | BINGO ADVENTURE | 177 | V. 1 | eBINGO |
+| eBINGO GAMES | BINGO CARNAVAL | 148 | V. 1 | eBINGO |
+| eBINGO GAMES | CALACA BINGO | 149 | V. 1 | eBINGO |
+| eBINGO GAMES | CANDYLAND BINGO | 216 | V. 1 | eBINGO |
+| eBINGO GAMES | FORTUNE BINGO | 139 | V. 1 | eBINGO |
+| eBINGO GAMES | GO GOAL BINGO | 178 | V. 1 | eBINGO |
+| eBINGO GAMES | IRICH BINGO | 122 | V. 1 | eBINGO |
+| eBINGO GAMES | JACKPOT BINGO | 174 | V. 1 | eBINGO |
+| eBINGO GAMES | LUCKY BINGO | 150 | V. 1 | eBINGO |
+| eBINGO GAMES | MAGIC LAMP BINGO | 217 | V. 1 | eBINGO |
+| eBINGO GAMES | PEARLS OF BINGO | 195 | V. 1 | eBINGO |
+| eBINGO GAMES | SUPER BINGO | 151 | V. 1 | eBINGO |
+| eBINGO GAMES | WEST HUNTER BINGO | 173 | V. 1 | eBINGO |
 
 名单未注明所属厂商；按上述判定键（游戏厂商 + 游戏ID）逐条核对后写入名单配置表。
+
+两份名单已按 MegaXcess / PAGCOR 提供的清单逐条复核：游戏名称、游戏ID 均一致，两类游戏版本均为 V. 1；NG 对应游戏大类 NUMERIC GAMES，eBINGO 对应 eBINGO GAMES。
 
 ## 菜单路径
 
@@ -69,7 +71,7 @@
 | --- | --- | --- |
 | 游戏管理 → 游戏入口设置 → 游戏配置 | 列表新增「平台名称」列与异常标记；查询新增「平台名称」 | 有 |
 | 游戏管理 → 游戏入口设置 → 游戏配置 → 添加游戏 / 编辑 | 弹窗新增必填项「平台名称」，按名单自动带出并校验 | 有 |
-| 游戏管理 → 第三方对局查询(结算时间) | 「平台名称」查询项与列表列改用 NG / eBINGO / EGAMES，去掉 Special Game | 有 |
+| 游戏管理 → 第三方对局查询(结算时间) | 「平台名称」查询项与列表列改用 NG / eBINGO / EGAMES，去掉 Special Game，导出同步 | 有 |
 | 游戏管理 → 第三方对局查询 | 同上（按下注时间查询的版本） | 无，按结算时间页同步改 |
 | 数据报表 → 三方游戏统计（e-game / ng / e-bingo） | 三张报表改名为 EGAMES / NG / eBINGO，取数改为按游戏平台名称 | 无 |
 | 数据报表 → 三方游戏报表（新）、报表下载 | 平台分类口径与导出字段同步 | 无 |
@@ -109,7 +111,7 @@
 
 - **查询项「平台名称」**：选项改为 平台名称（全部）/ NG / eBINGO / EGAMES，去掉 Special Game。
 - **列表列「平台名称」**：显示注单上记录的平台分类，写法同上。
-- **导出**：导出文件中的平台名称与页面一致。
+- **导出**：导出文件包含「平台名称」列，取值与页面一致；按平台名称筛选后导出只含该分类（见「数据导出」）。
 
 ## 数据与接口
 
@@ -124,11 +126,31 @@
 | 后台接口 | 游戏列表、游戏详情、注单查询返回 `platform_category`，并支持按它筛选；保存游戏接口服务端校验分类 |
 | 对外 / 前台 API | 涉及游戏分类的字段统一为 NG / eBINGO / EGAMES，需技术排查全部调用方 |
 | 三方游戏统计（e-game / ng / e-bingo） | 改为按注单 `platform_category` 分三张表统计；字段口径不变（游戏类型、供应商、投注、派彩、审计费用，默认真实用户，金额 2 位小数，CSV 进【报表下载】） |
-| 导出 | 所有带平台名称的导出文件同步新写法 |
+| 导出 | 见下方「数据导出」 |
 | 缓存 | 游戏分类、名单有缓存的，变更后主动刷新 |
 
 - **注单要存快照**：名单以后可能调整，存快照可保证已报送的 PAGCOR 数据能复现。名单变更是否追溯历史注单，每次单独评审。
 - **游戏类别不动**：「游戏类别」（Hot / Slot / Bingo 等，用于前台入口）与「平台名称」（PAGCOR 分类）是两个独立字段，本次不改前者。
+
+## 数据导出
+
+所有涉及游戏或注单数据的导出都要带上新分类，并与页面、报表口径保持一致。
+
+| 导出入口 | 要求 |
+| --- | --- |
+| 游戏管理 → 第三方对局查询(结算时间) → 导出 | 「平台名称」列取值改为 NG / eBINGO / EGAMES，不再出现 Special Game；按当前查询条件（含平台名称）导出 |
+| 游戏管理 → 第三方对局查询 → 导出 | 同上 |
+| 数据报表 → 三方游戏统计（NG / eBINGO / EGAMES） | 三张报表按注单平台名称分别导出 CSV，生成到【报表下载】；报表名和文件名同步改为 NG / eBINGO / EGAMES |
+| 数据报表 → 三方游戏报表（新） | 导出含游戏维度时，增加「平台名称」列 |
+| 数据报表 → 会员报表（第三方游戏报表） | 按游戏维度导出时，增加「平台名称」列 |
+| 数据报表 → 报表下载 | 修复前已生成的文件保留不覆盖；修复后重新生成的文件在文件名或备注中标注「分类修正后」 |
+| 游戏管理 → 游戏入口设置 → 游戏配置 | 页面没有导出，本次不新增；全量检查所需的游戏分类清单由技术导出（见历史数据修复第 1 步） |
+
+- **取值来源**：注单类导出取注单上的分类快照，游戏类导出取游戏表当前分类；导出时不重新计算。
+- **字段与写法**：列名统一为「平台名称」，取值只允许 NG / eBINGO / EGAMES，不得出现空值或旧写法。
+- **口径**：沿用现有导出规则：查询最长 31 天、UTC+8 自然日、过滤测试用户、金额 2 位小数、大数据量走【报表下载】异步生成。
+- **一致性**：导出行数和合计与页面「查询总计」一致；三类分别导出的合计，应等于不筛选平台名称时的导出合计。
+- **权限与日志**：导出权限沿用现有配置（查看与导出分开）；导出行为记入【日志管理 > 操作日志】。
 
 ## 历史数据修复与核对
 
@@ -149,7 +171,7 @@
 | 场景 | 处理 |
 | --- | --- |
 | 游戏ID在名单内，但厂商不是名单对应厂商 | 不命中，归 EGAMES；判定必须是「厂商 + 游戏ID」同时匹配 |
-| 同名但游戏ID不同（如不同版本） | 按游戏ID判定；NG 名单标注 V. 1，后续新版本默认 EGAMES，需名单更新才归 NG |
+| 同名但游戏ID不同（如不同版本） | 按游戏ID判定；两份名单均标注 V. 1，后续新版本默认 EGAMES，需名单更新才归入 NG / eBINGO |
 | 运营改了游戏名称 | 不影响分类 |
 | 编辑游戏时改了厂商或游戏ID | 重新按名单判定并带出平台名称 |
 | 打开分类错误的历史游戏编辑 | 红字提示应为 X，改对才能保存 |
@@ -172,6 +194,9 @@
 - [ ] 三方游戏统计三张报表按新分类取数；修复前后同一天三类合计的投注、派彩、审计费用不变。
 - [ ] 后台、API、注单、报表、导出的分类写法全部为 NG / eBINGO / EGAMES。
 - [ ] 涉及的数据修改和游戏编辑都有操作日志（操作账号、时间、修改前后值）。
+- [ ] 各导出文件都有「平台名称」列，取值只有 NG / eBINGO / EGAMES，与页面显示一致。
+- [ ] 按平台名称筛选后导出，文件只含该分类数据；三类导出合计等于不筛选时的导出合计。
+- [ ] 修复后重新生成的三方游戏统计文件在【报表下载】中可区分，修复前的文件保留。
 
 ## 覆盖范围
 
