@@ -33,7 +33,7 @@
 <main class="main">
   <section class="view" id="view-prototype" aria-label="原型">
     <div class="proto-bar">
-      <span>游戏管理 · 第三方对局查询(结算时间) / 游戏入口设置（可交互，刷新后数据恢复初始状态）</span>
+      <span>游戏管理 · 第三方对局查询 / 第三方对局查询(结算时间) / 游戏入口设置-游戏配置（可交互，刷新后数据恢复初始状态）</span>
       <span class="sp"></span>
       <button type="button" id="fit-btn" class="on">适应宽度</button>
       <button type="button" id="real-btn">原始尺寸 1920×960</button>
@@ -72,15 +72,16 @@
 </tbody>
 </table></div>
 <h2 id="s2">需求目的</h2>
-<p>按 MegaXcess / PAGCOR 最新确认的规则，把游戏的平台分类（平台名称）统一为 NG / eBINGO / EGAMES 三类，并让后台、API、注单、报表、导出和 PAGCOR 报送数据使用同一份分类。</p>
+<p>按 MegaXcess / PAGCOR 最新确认的规则，把游戏的平台分类（平台名称）统一为 NG / eBINGO / EGAMES 三类，并让本次范围内的后台页面、注单和导出使用同一份分类。</p>
+<p><strong>本次范围</strong>：【游戏管理】下的「第三方对局查询」「第三方对局查询(结算时间)」，以及【游戏入口设置 &gt; 游戏配置】。其他菜单（包括数据报表、游戏类别管理）不在本次需求与原型范围内。</p>
 <ul>
-<li><strong>现状问题</strong>：系统内部分游戏的平台分类与 PAGCOR 规则不一致；后台各处写法也不统一（对局查询用 ng / E-Game / E-Bingo，三方游戏统计用 e-game / ng / e-bingo），影响 PAGCOR 审计抽成对账。</li>
+<li><strong>现状问题</strong>：系统内部分游戏的平台分类与 PAGCOR 规则不一致；对局查询的平台名称写法也不统一（ng / E-Game / E-Bingo，并含 Special Game），影响 PAGCOR 审计核对。</li>
 <li><strong>本次目标</strong>：
 <ol type="1">
 <li>全量检查并修正现有游戏的平台分类；</li>
 <li>在【游戏入口设置 &gt; 游戏配置】中新增「平台名称」字段和查询条件，分类按名单自动判定、不能随意改；</li>
-<li>注单、报表、导出、API 统一使用新分类，并对受影响的历史数据做修复和核对；</li>
-<li>后续新增游戏按同一规则归类，避免再次出现分类错误和报表数据迁移。</li>
+<li>两个对局查询页面的注单、筛选和导出统一使用新分类，并对受影响的历史注单做修复和核对；</li>
+<li>后续新增游戏按同一规则归类，避免再次出现分类错误。</li>
 </ol></li>
 <li><strong>原型</strong>：画布「PAGCOR游戏分类需求」，可在 Play 模式下操作全部交互。</li>
 </ul>
@@ -89,7 +90,7 @@
 <ul>
 <li><strong>判定键</strong>：游戏厂商 + 游戏ID。命中 NG 名单 → NG；命中 eBINGO 名单 → eBINGO；都不命中 → EGAMES。不按游戏名称判定（名称可能被运营改或存在同名）。</li>
 <li><strong>名单存储</strong>：作为系统配置表维护，后台不提供修改入口；名单变更需走技术配置 + 审批，并触发一次全量校验。</li>
-<li><strong>写法统一</strong>：后台、API、导出一律使用 <code>NG</code> / <code>eBINGO</code> / <code>EGAMES</code>。</li>
+<li><strong>写法统一</strong>：本次范围内的页面、接口、导出一律使用 <code>NG</code> / <code>eBINGO</code> / <code>EGAMES</code>。</li>
 </ul>
 <p><strong>NG 名单（7 款）</strong></p>
 <div class="table-wrap"><table>
@@ -262,7 +263,7 @@
 <p>名单未注明所属厂商；按上述判定键（游戏厂商 + 游戏ID）逐条核对后写入名单配置表。</p>
 <p>两份名单已按 MegaXcess / PAGCOR 提供的清单逐条复核：游戏名称、游戏ID 均一致，两类游戏版本均为 V. 1；NG 对应游戏大类 NUMERIC GAMES，eBINGO 对应 eBINGO GAMES。</p>
 <h2 id="s4">菜单路径</h2>
-<p>本次改动集中在【游戏管理】，并联动【数据报表】下供 PAGCOR 审计使用的报表。</p>
+<p>本次改动只涉及【游戏管理】下的三个页面。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
@@ -290,22 +291,7 @@
 <tr class="even">
 <td>游戏管理 → 第三方对局查询</td>
 <td>同上（按下注时间查询的版本）</td>
-<td>无，按结算时间页同步改</td>
-</tr>
-<tr class="odd">
-<td>数据报表 → 三方游戏统计（e-game / ng / e-bingo）</td>
-<td>三张报表改名为 EGAMES / NG / eBINGO，取数改为按游戏平台名称</td>
-<td>无</td>
-</tr>
-<tr class="even">
-<td>数据报表 → 三方游戏报表（新）、报表下载</td>
-<td>平台分类口径与导出字段同步</td>
-<td>无</td>
-</tr>
-<tr class="odd">
-<td>平台概况 → 用户数据 → 游戏厂商数据</td>
-<td>如有按平台分类的统计，同步口径</td>
-<td>无</td>
+<td>有</td>
 </tr>
 </tbody>
 </table></div>
@@ -376,7 +362,7 @@
 <li><strong>导出</strong>：导出文件包含「平台名称」列，取值与页面一致；按平台名称筛选后导出只含该分类（见「数据导出」）。</li>
 </ul>
 <h2 id="s6">数据与接口</h2>
-<p>分类只有一个来源：名单配置表。游戏表存判定结果，注单存结算时的分类快照，报表、导出、PAGCOR 数据都从注单快照取数，不再各自维护游戏清单。字段名为建议，以技术方案为准。</p>
+<p>分类只有一个来源：名单配置表。游戏表存判定结果，注单存结算时的分类快照，对局查询的页面展示、筛选和导出都从注单快照取数。字段名为建议，以技术方案为准。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
@@ -406,14 +392,6 @@
 <td>游戏列表、游戏详情、注单查询返回 <code>platform_category</code>，并支持按它筛选；保存游戏接口服务端校验分类</td>
 </tr>
 <tr class="even">
-<td>对外 / 前台 API</td>
-<td>涉及游戏分类的字段统一为 NG / eBINGO / EGAMES，需技术排查全部调用方</td>
-</tr>
-<tr class="odd">
-<td>三方游戏统计（e-game / ng / e-bingo）</td>
-<td>改为按注单 <code>platform_category</code> 分三张表统计；字段口径不变（游戏类型、供应商、投注、派彩、审计费用，默认真实用户，金额 2 位小数，CSV 进【报表下载】）</td>
-</tr>
-<tr class="even">
 <td>导出</td>
 <td>见下方「数据导出」</td>
 </tr>
@@ -428,7 +406,7 @@
 <li><strong>游戏类别不动</strong>：「游戏类别」（Hot / Slot / Bingo 等，用于前台入口）与「平台名称」（PAGCOR 分类）是两个独立字段，本次不改前者。</li>
 </ul>
 <h2 id="s7">数据导出</h2>
-<p>所有涉及游戏或注单数据的导出都要带上新分类，并与页面、报表口径保持一致。</p>
+<p>本次范围内的导出都要带上新分类，并与页面显示保持一致。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
@@ -446,46 +424,29 @@
 <td>同上</td>
 </tr>
 <tr class="odd">
-<td>数据报表 → 三方游戏统计（NG / eBINGO / EGAMES）</td>
-<td>三张报表按注单平台名称分别导出 CSV，生成到【报表下载】；报表名和文件名同步改为 NG / eBINGO / EGAMES</td>
-</tr>
-<tr class="even">
-<td>数据报表 → 三方游戏报表（新）</td>
-<td>导出含游戏维度时，增加「平台名称」列</td>
-</tr>
-<tr class="odd">
-<td>数据报表 → 会员报表（第三方游戏报表）</td>
-<td>按游戏维度导出时，增加「平台名称」列</td>
-</tr>
-<tr class="even">
-<td>数据报表 → 报表下载</td>
-<td>修复前已生成的文件保留不覆盖；修复后重新生成的文件在文件名或备注中标注「分类修正后」</td>
-</tr>
-<tr class="odd">
 <td>游戏管理 → 游戏入口设置 → 游戏配置</td>
 <td>页面没有导出，本次不新增；全量检查所需的游戏分类清单由技术导出（见历史数据修复第 1 步）</td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li><strong>取值来源</strong>：注单类导出取注单上的分类快照，游戏类导出取游戏表当前分类；导出时不重新计算。</li>
+<li><strong>取值来源</strong>：对局查询导出取注单上的分类快照，导出时不重新计算。</li>
 <li><strong>字段与写法</strong>：列名统一为「平台名称」，取值只允许 NG / eBINGO / EGAMES，不得出现空值或旧写法。</li>
 <li><strong>口径</strong>：沿用现有导出规则：查询最长 31 天、UTC+8 自然日、过滤测试用户、金额 2 位小数、大数据量走【报表下载】异步生成。</li>
 <li><strong>一致性</strong>：导出行数和合计与页面「查询总计」一致；三类分别导出的合计，应等于不筛选平台名称时的导出合计。</li>
 <li><strong>权限与日志</strong>：导出权限沿用现有配置（查看与导出分开）；导出行为记入【日志管理 &gt; 操作日志】。</li>
 </ul>
 <h2 id="s8">历史数据修复与核对</h2>
-<p>上线后先修游戏配置，再按确认的范围回刷注单和报表，最后与 MegaXcess / PAGCOR 对账。每一步都要留存修改前后清单。</p>
+<p>上线后先修游戏配置，再按确认的范围回刷历史注单，最后核对对局查询数据。每一步都要留存修改前后清单。</p>
 <ol type="1">
 <li><strong>全量检查</strong>：导出全部游戏的「厂商 + 游戏ID + 游戏名称 + 当前分类 + 名单判定分类」，列出不一致清单，交产品和运营确认。</li>
 <li><strong>名单核对</strong>：确认 7 款 NG、13 款 eBINGO 在系统内都能找到对应游戏；找不到的单独列出，不能默认跳过。</li>
 <li><strong>修正游戏配置</strong>：按名单批量更新游戏表 <code>platform_category</code>，其余全部置为 EGAMES；记录操作日志。</li>
 <li><strong>回刷注单</strong>：对确认范围内的历史注单重算分类快照；起始日期由产品与技术确认。</li>
-<li><strong>重生成报表</strong>：重新生成受影响区间的三方游戏统计（NG / eBINGO / EGAMES），旧文件保留不覆盖。</li>
-<li><strong>对账</strong>：按天、按分类比对修复前后的投注、派彩、审计费用；三类合计应保持不变，只是在分类之间转移。差异清单交财务 / 合规与 MegaXcess 确认。</li>
+<li><strong>核对</strong>：按天、按平台名称比对修复前后对局查询的投注、派彩合计；三类合计应保持不变，只是在分类之间转移。差异清单交财务 / 合规确认。</li>
 </ol>
 <ul>
-<li><strong>报表口径</strong>：按本地时区 UTC+8 自然日（0:00:00–23:59:59）统计，过滤测试用户（Test 前缀），金额保留 2 位小数。</li>
+<li><strong>统计口径</strong>：按本地时区 UTC+8 自然日（0:00:00–23:59:59）统计，过滤测试用户（Test 前缀），金额保留 2 位小数。</li>
 <li><strong>执行方式</strong>：脚本先在 QA 环境跑一遍，结果确认后再上生产；生产执行选低峰时段，并准备回滚脚本。</li>
 </ul>
 <h2 id="s9">边界与异常</h2>
@@ -531,7 +492,7 @@
 </tr>
 <tr class="odd">
 <td>跨日注单（下注与结算不在同一天）</td>
-<td>快照以结算写入时为准，报表按现有口径归日</td>
+<td>快照以结算写入时为准，对局查询按现有口径归日</td>
 </tr>
 <tr class="even">
 <td>名单日后变更</td>
@@ -549,22 +510,20 @@
 <li><label><input type="checkbox" />直接调用保存接口提交错误分类被拒绝。</label></li>
 <li><label><input type="checkbox" />厂商新同步的游戏自动得到正确分类。</label></li>
 <li><label><input type="checkbox" />对局查询（下注时间 / 结算时间）的平台名称选项为 NG / eBINGO / EGAMES，没有 Special Game；列表和导出一致。</label></li>
-<li><label><input type="checkbox" />三方游戏统计三张报表按新分类取数；修复前后同一天三类合计的投注、派彩、审计费用不变。</label></li>
-<li><label><input type="checkbox" />后台、API、注单、报表、导出的分类写法全部为 NG / eBINGO / EGAMES。</label></li>
+<li><label><input type="checkbox" />本次范围内页面、注单、导出的分类写法全部为 NG / eBINGO / EGAMES。</label></li>
 <li><label><input type="checkbox" />涉及的数据修改和游戏编辑都有操作日志（操作账号、时间、修改前后值）。</label></li>
 <li><label><input type="checkbox" />各导出文件都有「平台名称」列，取值只有 NG / eBINGO / EGAMES，与页面显示一致。</label></li>
 <li><label><input type="checkbox" />按平台名称筛选后导出，文件只含该分类数据；三类导出合计等于不筛选时的导出合计。</label></li>
-<li><label><input type="checkbox" />修复后重新生成的三方游戏统计文件在【报表下载】中可区分，修复前的文件保留。</label></li>
 </ul>
 <h2 id="s11">覆盖范围</h2>
 <ul>
-<li><strong>管理后台</strong>（PC）：游戏配置、对局查询、三方游戏统计及相关导出。</li>
-<li><strong>服务端</strong>：名单配置、游戏表、厂商同步、注单、报表任务、API。</li>
+<li><strong>管理后台</strong>（PC）：第三方对局查询、第三方对局查询(结算时间)、游戏入口设置 &gt; 游戏配置，以及两个对局查询页面的导出。</li>
+<li><strong>服务端</strong>：名单配置、游戏表、厂商同步、注单、上述页面的后台接口。</li>
 <li><strong>C 端</strong>（H5 / PC / PWA / Android APP / iOS / Maya · Glife 小程序）：无页面改动，前台游戏入口仍按「游戏类别」展示。若前台接口返回了分类字段，需确认没有依赖旧取值。</li>
-<li><strong>代理后台</strong>：如报表按平台分类统计，需同步口径（待确认）。</li>
+<li><strong>不在本次范围</strong>：数据报表（含三方游戏统计）、游戏类别管理及其他菜单。</li>
 </ul>
 <h2 id="s12">检查清单对照</h2>
-<p>对照知识库第 18 章检查清单：本需求涉及合规、报表、时区、数据查询、操作日志与权限、覆盖端 6 项；不涉及 KYC、账号状态、活动配置、营销费用、账变通知、流水提现、充值渠道、风控。</p>
+<p>对照知识库第 18 章检查清单：本需求涉及合规、时区、数据查询、操作日志与权限、覆盖端 5 项；不涉及 KYC、账号状态、活动配置、营销费用、账变通知、流水提现、充值渠道、风控。</p>
 <div class="table-wrap"><table>
 <thead>
 <tr class="header">
@@ -579,11 +538,11 @@
 </tr>
 <tr class="even">
 <td>3 NDRP / PAGCOR 合规</td>
-<td>核心：分类需与 MegaXcess / PAGCOR 名单一致，影响审计抽成报表</td>
+<td>核心：分类需与 MegaXcess / PAGCOR 名单一致，影响 PAGCOR 审计核对</td>
 </tr>
 <tr class="odd">
 <td>11 时区与时间</td>
-<td>报表按 UTC+8 自然日；后台显示时间为 −04:00</td>
+<td>对局查询按 UTC+8 自然日统计；后台显示时间为 −04:00</td>
 </tr>
 <tr class="even">
 <td>12 数据查询</td>

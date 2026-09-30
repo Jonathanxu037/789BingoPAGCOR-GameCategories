@@ -52,14 +52,14 @@
   var CATS = [['Hot', true, 'Hot', '10'], ['Slot', false, '老虎机', '9'], ['Casino', false, '', '8'], ['Poker', false, 'Poker', '7'], ['Bingo', false, '', '6'], ['Arcade', false, '', '5']];
   var NAV = ['厂商设置', '返水设定', '第三方对局查询', '第三方对局查询(结算时间)', '第三方其他费用', '游戏入口设置', 'SEO游戏介绍'];
   var TABS = [['短信列表', '短信列表'], ['第三方对局查询', '第三方对局查询'], ['厂商设置', '厂商设置'], ['第三方对局查询(结算时间)', '第三方对局查询(结...'], ['第三方其他费用', '第三方其他费用'], ['游戏入口设置', '游戏入口设置']];
-  var SETTLE = '第三方对局查询(结算时间)', ENTRY = '游戏入口设置';
+  var SETTLE = '第三方对局查询(结算时间)', BET = '第三方对局查询', ENTRY = '游戏入口设置';
 
   // ---------- 原型组件 ----------
   class App extends Component {
     constructor() {
       super();
       this.state = {
-        page: ENTRY, entryTab: 'cat',
+        page: ENTRY, entryTab: 'cfg',
         open: false, sel: '', applied: '',
         cfgOpen: false, cfgSel: '', cfgApplied: '',
         catOn: { Hot: true, Slot: true, Casino: true, Poker: true, Bingo: true, Arcade: true },
@@ -79,7 +79,7 @@
       };
     }
     componentWillUnmount() { clearTimeout(this._t); }
-    go(p) { this.setState({ page: p, open: false, cfgOpen: false }); }
+    go(p) { this.setState({ page: p, open: false, cfgOpen: false, sel: '', applied: '' }); }
     setForm(patch) { this.setState({ form: Object.assign({}, this.state.form, patch) }); }
     showToast(t) {
       var self = this;
@@ -157,7 +157,7 @@
             <button type="button" class="btn" onClick=${function () { self.setState({ applied: self.state.sel, open: false }); }}>搜索</button>
             <button type="button" class="btn" onClick=${function () {
               var lines = rows.map(function (r) { return [r[0], r[1], r[2], '已结算', r[2], r[3], 'JILI', 'JILI', r[4], r[5], r[5], '-' + r[5], '0.000', '0.000', 'EGAMES', 'bb wave', 'PC', r[5]]; });
-              exportCsv(head.map(function (h) { return h.replace(' ⇅', ''); }), lines, 'bet_records_by_settle_time_' + (applied || 'ALL') + '.csv');
+              exportCsv(head.map(function (h) { return h.replace(' ⇅', ''); }), lines, (s.page === BET ? 'bet_records_by_bet_time_' : 'bet_records_by_settle_time_') + (applied || 'ALL') + '.csv');
               self.showToast('已导出 ' + lines.length + ' 条注单（平台名称：' + (applied || '全部') + '）');
             }}>导出</button>
           </div>
@@ -383,7 +383,7 @@
 
     render(_, s) {
       var self = this;
-      var isSettle = s.page === SETTLE, isEntry = s.page === ENTRY, isCat = s.entryTab === 'cat';
+      var isSettle = s.page === SETTLE || s.page === BET, isEntry = s.page === ENTRY, isCat = s.entryTab === 'cat';
       return html`<div class="root">
         <div class="topbar"><div>当前时间: <span class="time">2026/09/29 06:24:55 -04:00</span></div><div class="right"><span>⛶</span><span>简体中文</span><span>Joshua0926 ▾</span></div></div>
         <div class="statbar">
@@ -412,9 +412,9 @@
                   <button type="button" role="tab" aria-selected=${isCat ? 'true' : 'false'} class=${isCat ? 'on' : ''} onClick=${function () { self.setState({ entryTab: 'cat', cfgOpen: false }); }}>游戏类别管理</button>
                   <button type="button" role="tab" aria-selected=${isCat ? 'false' : 'true'} class=${isCat ? '' : 'on'} onClick=${function () { self.setState({ entryTab: 'cfg' }); }}>游戏配置</button>
                 </div>
-                ${isCat ? this.catPage() : this.cfgPage()}
+                ${isCat ? html`<div style="display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;padding:120px 0">【游戏类别管理】不在本次需求与原型范围内</div>` : this.cfgPage()}
               </div>`}
-              ${!isSettle && !isEntry && html`<div style="display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;padding:120px 0">【${s.page}】不在本次原型范围内</div>`}
+              ${!isSettle && !isEntry && html`<div style="display:flex;align-items:center;justify-content:center;color:#999;font-size:14px;padding:120px 0">【${s.page}】不在本次需求与原型范围内</div>`}
             </div>
           </div>
         </div>
