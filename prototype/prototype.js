@@ -218,7 +218,6 @@
           <span class="fake" style="width:124px;padding:0 12px"><span>游戏类别</span><span>⌄</span></span>
           <div style="position:relative">
             ${this.dropdown([''].concat(PLATS), s.cfgSel, s.cfgOpen, function () { self.setState({ cfgOpen: !self.state.cfgOpen }); }, function (o) { self.setState({ cfgSel: o, cfgOpen: false }); }, 128)}
-            <span class="new-tag">新增</span>
           </div>
           <span class="fake" style="width:116px;padding:0 12px"><span>是否开启</span><span>⌄</span></span>
           <span class="fake" style="width:116px;padding:0 12px"><span>游戏终端</span><span>⌄</span></span>
@@ -338,7 +337,7 @@
                 <select id="f-plat" class="sel hl" value=${f.plat} onChange=${val('plat')}>
                   <option value="">请选择平台名称</option>
                   ${PLATS.map(function (p) { return html`<option value=${p} disabled=${ready && expect !== p}>${p}</option>`; })}
-                </select><span class="inline-new">新增</span>
+                </select>
               </div>
               <span class="hint">按「游戏厂商 + 游戏ID」对照PAGCOR分类名单自动带出：名单内游戏只能选对应分类，名单外游戏只能选EGAMES</span>
               ${err.plat && html`<span class="err">请选择平台名称</span>`}
