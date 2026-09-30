@@ -216,8 +216,6 @@
           <button type="button" class="btn" onClick=${function () { self.setState({ cfgSel: '', cfgApplied: '', cfgOpen: false }); }}>重置</button>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:10px;padding-right:62px">
-          <button type="button" class=${'btn warn' + (s.onlyBad ? ' on' : '')} aria-pressed=${s.onlyBad ? 'true' : 'false'} onClick=${function () { self.setState({ onlyBad: !self.state.onlyBad }); }}>仅看分类异常 (${badCount})</button>
-          <button type="button" class="btn ghost" onClick=${function () { self.setState({ listOpen: true, cfgOpen: false }); }}>PAGCOR分类名单</button>
           <button type="button" class="btn" onClick=${function () { self.setState({ modal: { mode: 'add' }, form: blankForm(), err: {}, coverErr: '', cfgOpen: false }); }}>添加游戏</button>
         </div>
         <div style="border:1px solid #ebeef5;padding:10px;overflow-x:auto">
